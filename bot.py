@@ -10,7 +10,9 @@ from telegram.constants import ParseMode
 from telegram.error import TimedOut, NetworkError, RetryAfter
 
 # ─── CONFIG ───────────────────────────────────────────────────────────────────
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8663170411:AAEer7ziKHmqIg1TZ-7QN_jzSd17aH6gNfc")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise RuntimeError("BOT_TOKEN environment variable is not set.")
 MAX_MB    = int(os.environ.get("MAX_FILE_SIZE_MB", 125))
 MAX_BYTES = MAX_MB * 1024 * 1024
 SUPPORTED = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".tif", ".gif"}
