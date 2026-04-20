@@ -1,44 +1,41 @@
-# CBZ → PDF Telegram Bot
+# CBZ → PDF Telegram Bot (Pyrogram)
 
-A Telegram bot that converts `.cbz` (Comic Book ZIP) files to PDF with real-time progress updates.
+Production-ready Telegram bot that accepts only `.cbz` files and returns only PDF files in strict FIFO order per user.
 
-## Features
+## Behavior
 
-- 📦 Send one or multiple `.cbz` files — processed one by one per user
-- 📊 Real-time progress bar updates during conversion
-- 🔄 Per-user queue — no interference between users
-- 🖼️ Handles JPEG, PNG, WebP, BMP, TIFF, GIF images inside CBZ files
-- 🔒 Safe ZIP extraction (path traversal protection)
-- 🧹 Auto-cleanup of temporary files after each conversion
-- ⚡ Async processing — bot stays responsive under load
-
-## Requirements
-
-- Python 3.10+
-- A Telegram bot token from [@BotFather](https://t.me/BotFather)
+- One queue per user, one worker per user
+- Multiple CBZ files are processed sequentially in exact receive order
+- Non-CBZ messages/files are ignored silently
+- Single progress message per file using edit updates:
+  - Downloading
+  - Extracting
+  - Converting
+  - Uploading
+- Progress message is auto-deleted after successful PDF upload
+- `/cancel` stops current processing, clears queue, and deletes progress message silently
 
 ## Setup
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/prashanttupsundar2121-star/CBZ-TO-PDF.git
-cd CBZ-TO-PDF
-```
-
-### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Set your bot token
+Set required environment variables:
 
 ```bash
-export BOT_TOKEN="your_telegram_bot_token_here"
+export API_ID="your_api_id"
+export API_HASH="your_api_hash"
+export BOT_TOKEN="your_bot_token"
 ```
 
-### 4. Run the bot
+Optional:
+
+```bash
+export MAX_FILE_SIZE_MB="125"
+```
+
+Run:
 
 ```bash
 python bot.py
@@ -46,32 +43,12 @@ python bot.py
 
 ## Docker
 
-Build and run with Docker:
-
 ```bash
 docker build -t cbz-pdf-bot .
-docker run -e BOT_TOKEN="your_telegram_bot_token_here" cbz-pdf-bot
+docker run \
+  -e API_ID="your_api_id" \
+  -e API_HASH="your_api_hash" \
+  -e BOT_TOKEN="your_bot_token" \
+  -e MAX_FILE_SIZE_MB="125" \
+  cbz-pdf-bot
 ```
-
-## Environment Variables
-
-| Variable | Default | Description |
-|---|---|---|
-| `BOT_TOKEN` | *(required)* | Telegram bot token from @BotFather |
-| `MAX_FILE_SIZE_MB` | `125` | Maximum allowed CBZ file size in MB |
-
-## Usage
-
-1. Start a chat with your bot on Telegram.
-2. Send `/start` to see instructions.
-3. Send one or more `.cbz` files.
-4. The bot converts each file and sends back the PDF.
-
-## File Size Limits
-
-- Default maximum: **125 MB** per file (configurable via `MAX_FILE_SIZE_MB`)
-- Telegram's own upload limit applies (up to 2 GB with Bot API local server)
-
-## License
-
-MIT
