@@ -98,9 +98,8 @@ def convert_to_pdf(images: list[Path], pdf_path: Path, cancel_event: threading.E
             for path in safe_images:
                 if cancel_event.is_set():
                     raise ConversionCancelled
-                image = Image.open(path)
-                pil_images.append(image.convert("RGB"))
-                image.close()
+                with Image.open(path) as image:
+                    pil_images.append(image.convert("RGB").copy())
             if not pil_images:
                 raise ValueError("unable to convert")
             pil_images[0].save(pdf_path, save_all=True, append_images=pil_images[1:], format="PDF")
