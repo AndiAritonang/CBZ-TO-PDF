@@ -16,9 +16,9 @@ from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import Message
 
-API_ID = int(os.environ["37623239"])
-API_HASH = os.environ["9661c0bdbd8392709dd93139e8c3afcb"]
-BOT_TOKEN = os.environ["8663170411:AAGOMwGydm7c0Cq-7JedNAegbPdFIHq7-4c"]
+API_ID = int(os.environ["API_ID"])
+API_HASH = os.environ["API_HASH"]
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 MAX_MB = int(os.environ.get("MAX_FILE_SIZE_MB", 125))
 MAX_BYTES = MAX_MB * 1024 * 1024
